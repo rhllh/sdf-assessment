@@ -11,8 +11,6 @@ public class MailMerge {
     private List<String> columns;
     private List<List<String>> values;
     private File templateFile;
-    
-    private int numOfCols;
 
     private FileReader fr;
     private BufferedReader br;
@@ -23,7 +21,6 @@ public class MailMerge {
         this.columns = columns;
         this.values = values;
         this.templateFile = file;
-        this.numOfCols = this.columns.size();
     }
 
     public void merge() {
