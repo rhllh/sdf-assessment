@@ -8,17 +8,21 @@ import java.util.List;
 
 public class MailMerge {
     private int lineNo;
+    private List<String> columns;
     private List<List<String>> values;
     private File templateFile;
+    private int numOfCols;
 
     private FileReader fr;
     private BufferedReader br;
     private String line;
 
-    public MailMerge(int lineNo, List<List<String>> values, File file) {
-        this.lineNo = lineNo;
+    public MailMerge(int lineNo, List<String> columns, List<List<String>> values, File file) {
+        this.lineNo = lineNo;       // for looping through csv
+        this.columns = columns;
         this.values = values;
         this.templateFile = file;
+        this.numOfCols = this.columns.size();
     }
 
     public void merge() {
@@ -28,19 +32,20 @@ public class MailMerge {
             line = null;
             while ((line = br.readLine()) != null) {
                 if (line.contains("__")) {
-                    if (line.split("__")[1].toLowerCase().equals("address")) {
-                        String fullAddress = (values.get(lineNo).get(2)).replace("\\n", System.lineSeparator());
-                        line = line.replace("__address__", fullAddress);
-                    } else if (line.split("__")[1].toLowerCase().equals("first_name")) {
-                        line = line.replace("__first_name__", values.get(lineNo).get(0));
-                    } else if (line.split("__")[1].toLowerCase().equals("years")) {
-                        line = line.replace("__years__", values.get(lineNo).get(3));
-                    } else if (line.split("__")[1].toLowerCase().equals("last_name")) {
-                        line = line.replace("__last_name__", values.get(lineNo).get(1));
+                    // no hard coding 
+                    
+                    for (int i = 0; i < line.split("__").length; i++) {
+                        // there could be more than one __ in the same line
+                        String colName = line.split("__")[i+1].toLowerCase();
+                        System.out.println(colName);
+                        line = line.replace("__", values.get(lineNo).get(columns.indexOf(colName)));
+                        i++;
                     }
+                    
                 }
                 System.out.println(line);
             }
+            System.out.println("-----------------------------------");
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
