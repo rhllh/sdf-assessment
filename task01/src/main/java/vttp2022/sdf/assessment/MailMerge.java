@@ -11,6 +11,7 @@ public class MailMerge {
     private List<String> columns;
     private List<List<String>> values;
     private File templateFile;
+    
     private int numOfCols;
 
     private FileReader fr;
@@ -31,19 +32,25 @@ public class MailMerge {
             br = new BufferedReader(fr);
             line = null;
             while ((line = br.readLine()) != null) {
-                if (line.contains("__")) {
-                    // no hard coding 
-                    
-                    for (int i = 0; i < line.split("__").length; i++) {
-                        // there could be more than one __ in the same line
-                        String colName = line.split("__")[i+1].toLowerCase();
-                        System.out.println(colName);
-                        line = line.replace("__", values.get(lineNo).get(columns.indexOf(colName)));
-                        i++;
+                // in every line,
+                // check the substrings that begin and end with __ against COLUMN
+                // replace these substrings including the __ with the corresponding VALUE
+                // check if there are more than one to replace
+                // reassign to line
+
+                if (line.contains("__")) {          // check if there is something to replace
+                    String[] terms = line.split("__");
+                    for (int i = 0; i < terms.length; i++) {
+                        if (columns.contains(terms[i])) {
+                            line = line.replace("__" + terms[i] + "__", values.get(lineNo-1).get(columns.indexOf(terms[i])));
+                            if (line.contains("\\n"))
+                                line = line.replace("\\n","\r\n");
+                        }
+                        
                     }
-                    
                 }
                 System.out.println(line);
+                
             }
             System.out.println("-----------------------------------");
         } catch (IOException e) {

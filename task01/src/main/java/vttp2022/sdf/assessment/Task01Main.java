@@ -44,7 +44,8 @@ public class Task01Main
 
         int numberOfMails = fio.getNumberOfLines(csvFile);
 
-        for (int i = 1; i < numberOfMails-1; i++) {
+        for (int i = 1; i < numberOfMails; i++) {
+            System.out.println(i);
             MailMerge mm = new MailMerge(i, columns, values, templateFile);
             mm.merge();
         }

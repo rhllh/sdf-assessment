@@ -41,11 +41,13 @@ public class FileIO {
             fr = new FileReader(file);
             br = new BufferedReader(fr);
             line = null;
+            int count = 1;  // first line only
             while ((line = br.readLine()) != null) {
                 input = line.split(",");
-                if (line.toLowerCase().startsWith("first_name")) {
+                if (count == 1) {
                     columns = Arrays.asList(input);
                 }
+                count++;
             }
             br.close();
         } catch (Exception e) {
@@ -60,11 +62,13 @@ public class FileIO {
             fr = new FileReader(file);
             br = new BufferedReader(fr);
             line = null;
+            int count = 1;  // second line onwards
             while ((line = br.readLine()) != null) {
                 input = line.split(",");
-                if (!line.toLowerCase().startsWith("first_name")) {
+                if (count > 1) {
                     values.add(Arrays.asList(input));
                 }
+                count++;
             }
             br.close();
         } catch (Exception e) {
